@@ -1,14 +1,18 @@
 # Simple Todo App
 
-Give a brief description of the project here. Feel free to give it a different name.
+Logan Thomas Todo List, Learnig class, Constructors, and Method with Javascript
 
 ## Functionality
 
-Give a more detailed explanation of the project and its functionality.
+This JavaScript project implements a robust, reusable FormValidator class that dynamically handles form input validation and button state toggling in real time
 
 ## Technology
 
-Give a description of the technologies and techniques used. Pictures, GIFs, or screenshots that detail the project features are recommended.
+Core language used to build the FormValidator class.
+Features:
+Class-based structure
+Private methods and encapsulation via underscore conventions
+Modern array and event handling methods (forEach, Array.from, addEventListener)
 
 ## Deployment
 
