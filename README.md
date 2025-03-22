@@ -18,4 +18,4 @@ Modern array and event handling methods (forEach, Array.from, addEventListener)
 
 This project is deployed on GitHub Pages:
 
-- ADD LINK HERE
+https://lokeylogan.github.io/se_project_todo-app/
