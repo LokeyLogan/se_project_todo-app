@@ -50,7 +50,7 @@ addTodoForm.addEventListener("submit", (evt) => {
   const values = { name, date, id };
 
   renderTodo(values);
-  addTodoForm.reset(); // Clear form fields
+  newTodoValidator.resetValidation(); // This now handles resetting form + validation
   closeModal(addTodoPopup);
 });
 
