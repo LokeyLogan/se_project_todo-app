@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "https://jspm.dev/uuid";
-
 import { initialTodos, validationConfig } from "../utils/constants.js";
 
 import Todo from "../components/Todo.js";
@@ -11,16 +10,9 @@ import PopupWithForm from "../components/PopupWithForm.js";
 const addTodoButton = document.querySelector(".button_action_add");
 const addTodoPopup = document.querySelector("#add-todo-popup");
 const addTodoForm = document.forms["add-todo-form"];
-const addTodoCloseBtn = addTodoPopup.querySelector(".popup__close");
 const todosList = document.querySelector(".todos__list");
-const addTodoPopupElement = new PopupWithForm({
-  popupSelector: "#add-todo-popup",
-  handleFormSubmit: () => {},
-});
 
-addTodoPopupElement.setEventListeners();
-
-// 🛠 Must be declared BEFORE used in renderer
+// 🧠 Generator & renderer functions (moved above usage to fix hoisting error)
 const generateTodo = (data) => {
   const todo = new Todo(data, "#todo-template");
   return todo.getView();
@@ -31,51 +23,43 @@ const renderTodo = (item) => {
   section.addItem(todoElement);
 };
 
-// Section instance with renderer and container
+// 📦 Section instance
 const section = new Section({
   items: initialTodos,
-  renderer: (item) => {
-    const todoElement = generateTodo(item);
-    section.addItem(todoElement);
-  },
+  renderer: renderTodo,
   containerSelector: ".todos__list",
 });
 
-// Render initial todos
+// 🚀 Render initial todos
 section.renderItems();
 
-// Modal controls
-// const openModal = (modal) => {
-//   modal.classList.add("popup_visible");
-// };
+// ✅ Form Validator
+const newTodoValidator = new FormValidator(validationConfig, addTodoForm);
+newTodoValidator.enableValidation();
 
-const closeModal = (modal) => {
-  modal.classList.remove("popup_visible");
-};
+// ✅ Updated handler inside PopupWithForm
+const addTodoPopupElement = new PopupWithForm({
+  popupSelector: "#add-todo-popup",
+  handleFormSubmit: (inputValues) => {
+    const date = new Date(inputValues.date);
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
 
-// Form submission handler
-addTodoForm.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-  const name = evt.target.name.value;
-  const dateInput = evt.target.date.value;
+    const id = uuidv4();
+    const values = {
+      name: inputValues.name,
+      date: date,
+      id: id,
+    };
 
-  const date = new Date(dateInput);
-  date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-
-  const id = uuidv4();
-  const values = { name, date, id };
-
-  renderTodo(values);
-  newTodoValidator.resetValidation();
-  addTodoPopupElement.close();
+    renderTodo(values);
+    newTodoValidator.resetValidation();
+    addTodoPopupElement.close();
+  },
 });
 
-// Modal open/close
+addTodoPopupElement.setEventListeners();
+
+// 🔓 Modal open trigger
 addTodoButton.addEventListener("click", () => {
   addTodoPopupElement.open();
 });
-// addTodoCloseBtn.addEventListener("click", () => addTodoPopupElement.close());
-
-// Enable validation
-const newTodoValidator = new FormValidator(validationConfig, addTodoForm);
-newTodoValidator.enableValidation();
