@@ -5,12 +5,15 @@ import Todo from "../components/Todo.js";
 import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
 import PopupWithForm from "../components/PopupWithForm.js";
+import TodoCounter from "../components/TodoCounter.js";
 
 // DOM references
 const addTodoButton = document.querySelector(".button_action_add");
 const addTodoPopup = document.querySelector("#add-todo-popup");
 const addTodoForm = document.forms["add-todo-form"];
 const todosList = document.querySelector(".todos__list");
+
+const todoCounter = new TodoCounter(initialTodos, ".counter__text");
 
 // 🧠 Generator & renderer functions (moved above usage to fix hoisting error)
 const generateTodo = (data) => {
