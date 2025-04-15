@@ -2,12 +2,12 @@ class Popup {
   constructor({ popupSelector }) {
     this._popupElement = document.querySelector(popupSelector);
     this._popCloseBtn = this._popupElement.querySelector(".popup__close");
-    this._handleEscapeClose = this._handleEscapeClose.bind(this); // bind to keep context
+    this._handleEscapeClose = this._handleEscapeClose.bind(this);
   }
 
   _handleEscapeClose(evt) {
     if (evt.key === "Escape") {
-      this.close(); // ✅ Call the close method
+      this.close();
     }
   }
 
@@ -18,8 +18,7 @@ class Popup {
 
   close() {
     this._popupElement.classList.remove("popup_visible");
-    document.removeEventListener("keyup", this._handleEscapeClose); // ✅ clean up
-    console.log("close Method Called");
+    document.removeEventListener("keyup", this._handleEscapeClose);
   }
 
   setEventListeners() {

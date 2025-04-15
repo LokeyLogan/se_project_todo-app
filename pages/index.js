@@ -9,15 +9,24 @@ import TodoCounter from "../components/TodoCounter.js";
 
 // DOM references
 const addTodoButton = document.querySelector(".button_action_add");
-const addTodoPopup = document.querySelector("#add-todo-popup");
 const addTodoForm = document.forms["add-todo-form"];
-const todosList = document.querySelector(".todos__list");
 
 const todoCounter = new TodoCounter(initialTodos, ".counter__text");
 
-// 🧠 Generator & renderer functions (moved above usage to fix hoisting error)
+function handleCheck(completed) {
+  todoCounter.updateCompleted(completed);
+}
+
+function handleDelete(completed) {
+  if (completed) {
+    todoCounter.updateCompleted(false);
+  }
+  todoCounter.updateTotal(false); // ✅ Decrease total when deleted
+}
+
+// 🧠 Generator & renderer functions
 const generateTodo = (data) => {
-  const todo = new Todo(data, "#todo-template");
+  const todo = new Todo(data, "#todo-template", handleCheck, handleDelete);
   return todo.getView();
 };
 
@@ -40,21 +49,25 @@ section.renderItems();
 const newTodoValidator = new FormValidator(validationConfig, addTodoForm);
 newTodoValidator.enableValidation();
 
-// ✅ Updated handler inside PopupWithForm
+// ✅ PopupWithForm with todo creation logic
 const addTodoPopupElement = new PopupWithForm({
   popupSelector: "#add-todo-popup",
   handleFormSubmit: (inputValues) => {
-    const date = new Date(inputValues.date);
-    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+    const date = inputValues.date ? new Date(inputValues.date) : null;
+    if (date) {
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+    }
 
     const id = uuidv4();
     const values = {
       name: inputValues.name,
       date: date,
       id: id,
+      completed: false,
     };
 
     renderTodo(values);
+    todoCounter.updateTotal(true);
     newTodoValidator.resetValidation();
     addTodoPopupElement.close();
   },
